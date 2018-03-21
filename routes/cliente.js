@@ -20,6 +20,7 @@ app.get('/', (req, res, next) => {
         .populate('usuario', 'nombre email img')
         .populate('estado')
         .populate('servicio')
+        .populate('empresa')
         .exec(
             (err, clientes) => {
 
@@ -65,6 +66,7 @@ app.get('/:id', (req, res) => {
         .populate('usuario', 'nombre img email')
         .populate('servicio')
         .populate('estado')
+        .populate('empresa')
         .exec((err, cliente) => {
 
             if (err) {
@@ -123,7 +125,7 @@ app.put('/:id', mdAuctenticacion.verificaToken, (req, res) => {
         cliente.usuario = req.usuario._id;
         cliente.servicio = body.servicio;
         cliente.estado = body.estado;
-        console.log(body.estado);
+        cliente.empresa = body.empresa;
 
         cliente.save((err, clienteGuardado) => {
 
@@ -156,7 +158,8 @@ app.post('/', mdAuctenticacion.verificaToken, (req, res) => {
         nombre: body.nombre,
         usuario: req.usuario._id,
         estado: body.estado,
-        servicio: body.servicio
+        servicio: body.servicio,
+        empresa: body.empresa
     });
 
     cliente.save((err, clienteGuardado) => {

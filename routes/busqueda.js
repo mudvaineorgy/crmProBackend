@@ -5,6 +5,8 @@ var app = express();
 var Servicio = require('../models/servicio');
 var Cliente = require('../models/cliente');
 var Usuario = require('../models/usuario');
+var Estado = require('../models/estado');
+var Empresa = require('../models/empresa');
 
 // =============================================================================
 // Generando una busqueda por categoria
@@ -28,6 +30,14 @@ app.get('/coleccion/:tabla/:busqueda', (req, res) => {
 
         case 'clientes':
             promesa = buscarClientes(busqueda, regex);
+            break;
+
+        case 'estado':
+            promesa = buscarEstado(busqueda, regex);
+            break;
+
+        case 'empresa':
+            promesa = buscarEmpresa(busqueda, regex);
             break;
 
         default:
@@ -60,7 +70,9 @@ app.get('/todo/:busqueda', (req, res, next) => {
     Promise.all([
             buscarServicios(busqueda, regex),
             buscarClientes(busqueda, regex),
-            buscarUsuarios(busqueda, regex)
+            buscarUsuarios(busqueda, regex),
+            buscarEstado(busqueda, regex),
+            buscarEmpresa(busqueda, regex)
         ])
         .then(respuestas => {
 
@@ -68,7 +80,9 @@ app.get('/todo/:busqueda', (req, res, next) => {
                 ok: true,
                 servicios: respuestas[0],
                 clientes: respuestas[1],
-                usuarios: respuestas[2]
+                usuarios: respuestas[2],
+                estado: respuestas[3],
+                empresa: respuestas[4]
             });
 
         })
@@ -125,6 +139,42 @@ function buscarUsuarios(busqueda, regex) {
                 }
 
             })
+    });
+}
+
+function buscarEstados(busqueda, regex) {
+
+    return new Promise((resolve, reject) => {
+
+        Estado.find({ nombre: regex })
+            .populate('estado')
+            .exec((err, empresas) => {
+
+                if (err) {
+                    reject('error al cargar empresas', err);
+                } else {
+                    resolve(empresas)
+                }
+            });
+
+    });
+}
+
+function buscarEmpresas(busqueda, regex) {
+
+    return new Promise((resolve, reject) => {
+
+        Empresa.find({ nombre: regex })
+            .populate('estado')
+            .exec((err, estados) => {
+
+                if (err) {
+                    reject('error al cargar estados', err);
+                } else {
+                    resolve(estados)
+                }
+            });
+
     });
 }
 
