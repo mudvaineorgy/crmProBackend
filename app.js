@@ -33,6 +33,7 @@ var uploadRoutes = require('./routes/upload');
 var imagenesRoutes = require("./routes/imagenes");
 var busquedaRoutes = require('./routes/busqueda');
 var estadoRoutes = require('./routes/estado');
+var empresaRoutes = require('./routes/empresa');
 
 
 // Conexion a la base de datos
@@ -58,6 +59,7 @@ app.use('/login', loginRoutes);
 app.use('/upload', uploadRoutes);
 app.use("/img", imagenesRoutes);
 app.use("/estado", estadoRoutes);
+app.use("/empresa", empresaRoutes);
 app.use('/', appRoutes);
 
 
