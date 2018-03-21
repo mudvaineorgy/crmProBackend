@@ -7,7 +7,7 @@ var app = express();
 var Estado = require('../models/estado');
 
 // =======================================================================================
-// OBTENER ESTATUS EXISTENTES GET
+// OBTENER ESTATUS EXISTENTES GET 
 // =======================================================================================
 app.get('/', (req, res, next) => {
 
