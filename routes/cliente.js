@@ -1,6 +1,7 @@
 // Requires, importacion de librerias que se necesitan para que funcione.
 var express = require('express'); // Se carga la libreria de express.
 var mdAuctenticacion = require('../middlewares/Autenticacion');
+var moment = require('moment');
 
 var app = express();
 
@@ -21,6 +22,7 @@ app.get('/', (req, res, next) => {
         .populate('estado')
         .populate('servicio')
         .populate('empresa')
+        .populate('mensaje')
         .exec(
             (err, clientes) => {
 
@@ -67,6 +69,7 @@ app.get('/:id', (req, res) => {
         .populate('servicio')
         .populate('estado')
         .populate('empresa')
+        .populate('mensaje')
         .exec((err, cliente) => {
 
             if (err) {
@@ -159,7 +162,9 @@ app.post('/', mdAuctenticacion.verificaToken, (req, res) => {
         usuario: req.usuario._id,
         estado: body.estado,
         servicio: body.servicio,
-        empresa: body.empresa
+        empresa: body.empresa,
+        mensaje: body.mensaje,
+        created_at: moment().format('DD MM YYYY, h:mm:ss a')
     });
 
     cliente.save((err, clienteGuardado) => {

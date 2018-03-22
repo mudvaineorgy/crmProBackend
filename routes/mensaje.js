@@ -1,10 +1,12 @@
 // Requires, importacion de librerias que se necesitan para que funcione.
 var express = require('express'); // Se carga la libreria de express.
 var mdAuctenticacion = require('../middlewares/Autenticacion');
+var moment = require('moment');
 
 var app = express();
 
 var Mensaje = require('../models/mensaje');
+var Cliente = require('../models/cliente');
 
 // =======================================================================================
 // OBTENER MENSAJES EXISTENTES GET 
@@ -60,7 +62,9 @@ app.post('/', mdAuctenticacion.verificaToken, (req, res) => {
 
     var mensaje = new Mensaje({
         texto: body.texto,
-        usuario: req.usuario._id
+        usuario: req.usuario._id,
+        cliente: body.cliente,
+        created_at: moment().format('Do MMMM YYYY, h:mm:ss a')
     });
 
     mensaje.save((err, mensajeGuardado) => {

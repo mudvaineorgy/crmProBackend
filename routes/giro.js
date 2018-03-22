@@ -1,6 +1,7 @@
 // Requires, importacion de librerias que se necesitan para que funcione.
 var express = require('express'); // Se carga la libreria de express.
 var mdAuctenticacion = require('../middlewares/Autenticacion');
+var moment = require('moment');
 
 var app = express();
 
@@ -142,7 +143,8 @@ app.post('/', mdAuctenticacion.verificaToken, (req, res) => {
 
     var giro = new Giro({
         nombre: body.nombre,
-        usuario: req.usuario._id
+        usuario: req.usuario._id,
+        created_at: moment().format('DD MM YYYY, h:mm:ss a')
     });
 
     giro.save((err, giroGuardado) => {

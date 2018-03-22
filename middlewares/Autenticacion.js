@@ -1,4 +1,5 @@
 var jwt = require('jsonwebtoken');
+var moment = require('moment');
 
 var SEED = require('../config/config').SEED;
 

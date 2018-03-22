@@ -32,6 +32,11 @@ var clienteSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Empresa',
         required: [true, 'El id de la empresa es un campo oblibatorio']
+    },
+    mensaje: {
+        type: Schema.Types.ObjectId,
+        ref: 'Mensaje',
+        required: false
     }
 
 });

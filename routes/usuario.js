@@ -2,6 +2,7 @@
 var express = require('express'); // Se carga la libreria de express.
 var bcrypt = require('bcryptjs'); // Se carga la libreria de ebycript para encriptar contrasenas.
 var jwt = require('jsonwebtoken');
+var moment = require('moment');
 
 var mdAuctenticacion = require('../middlewares/Autenticacion');
 
@@ -19,7 +20,7 @@ app.get('/', (req, res, next) => {
     var desde = req.query.desde || 0;
     desde = Number(desde);
 
-    Usuario.find({}, 'nombre email img role google')
+    Usuario.find({}, 'nombre email img role google apodo created_at')
         .skip(desde)
         .limit(10)
         .exec(
@@ -124,7 +125,7 @@ app.post('/', /*mdAuctenticacion.verificaToken,*/ (req, res) => {
         password: bcrypt.hashSync(body.password, 10),
         img: body.img,
         role: body.role,
-        crated_at: body.created_at
+        created_at: moment().format('DD MM YYYY, h:mm:ss a')
     });
 
     usuario.save((err, usuarioGuardado) => {

@@ -146,6 +146,7 @@ app.post('/google', (req, res) => {
                     usuario.img = payload.picture;
                     usuario.google = true;
 
+
                     usuario.save((err, usuarioDB) => {
                         if (err) {
                             return res.status(500).json({

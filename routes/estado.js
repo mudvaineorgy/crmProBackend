@@ -1,6 +1,7 @@
 // Requires, importacion de librerias que se necesitan para que funcione.
 var express = require('express'); // Se carga la libreria de express.
 var mdAuctenticacion = require('../middlewares/Autenticacion');
+var moment = require('moment');
 
 var app = express();
 
@@ -15,7 +16,7 @@ app.get('/', (req, res, next) => {
     desde = Number(desde);
 
     Estado.find({})
-        .populate('usuario', 'nombre email')
+        .populate('usuario', 'nombre email apodo')
         .skip(desde)
         .limit(10)
         .exec(
@@ -144,7 +145,8 @@ app.post('/', mdAuctenticacion.verificaToken, (req, res) => {
     var estado = new Estado({
         nombre: body.nombre,
         descripcion: body.descripcion,
-        usuario: req.usuario._id
+        usuario: req.usuario._id,
+        created_at: moment().format('Do MMMM YYYY, h:mm:ss a')
     });
 
     estado.save((err, estadoGuardado) => {
@@ -202,4 +204,4 @@ app.delete('/:id', mdAuctenticacion.verificaToken, (req, res) => {
 
 });
 
-module.exports = app;
+module.exports = app
