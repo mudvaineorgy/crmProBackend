@@ -86,6 +86,7 @@ app.put('/:id', mdAuctenticacion.verificaToken, (req, res) => {
 
         usuario.nombre = body.nombre;
         usuario.email = body.email;
+        usuario.apodo = body.apodo;
         usuario.role = body.role;
 
         usuario.save((err, usuarioGuardado) => {
@@ -119,9 +120,11 @@ app.post('/', /*mdAuctenticacion.verificaToken,*/ (req, res) => {
     var usuario = new Usuario({
         nombre: body.nombre,
         email: body.email,
+        apodo: body.apodo,
         password: bcrypt.hashSync(body.password, 10),
         img: body.img,
-        role: body.role
+        role: body.role,
+        crated_at: body.created_at
     });
 
     usuario.save((err, usuarioGuardado) => {

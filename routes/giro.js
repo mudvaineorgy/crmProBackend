@@ -4,36 +4,35 @@ var mdAuctenticacion = require('../middlewares/Autenticacion');
 
 var app = express();
 
-var Empresa = require('../models/empresa');
+var Giro = require('../models/giro');
 
 // =======================================================================================
-// OBTENER EMPRESAS EXISTENTES GET 
+// OBTENER GIROS EXISTENTES GET 
 // =======================================================================================
 app.get('/', (req, res, next) => {
 
     var desde = req.query.desde || 0;
     desde = Number(desde);
 
-    Empresa.find({})
+    Giro.find({})
         .populate('usuario', 'nombre email')
-        .populate('giro')
         .skip(desde)
         .limit(10)
         .exec(
-            (err, empresas) => {
+            (err, giros) => {
 
                 if (err) {
                     return res.status(500).json({
                         ok: false,
-                        mensaje: 'Error cargando empresas existentes',
+                        mensaje: 'Error cargando giros existentes',
                         errors: err
                     });
                 }
-                Empresa.count({}, (err, conteo) => {
+                Giro.count({}, (err, conteo) => {
                     if (err) {
                         return res.status(500).json({
                             ok: false,
-                            mensaje: 'Error cargando empresas existentes',
+                            mensaje: 'Error cargando giros existentes',
                             errors: err
                         });
                     }
@@ -41,7 +40,7 @@ app.get('/', (req, res, next) => {
                     res.status(200).json({
                         ok: true,
                         total: conteo,
-                        empresas: empresas,
+                        giros: giros,
 
                     });
 
@@ -53,32 +52,32 @@ app.get('/', (req, res, next) => {
 });
 
 // ==========================================
-// OBTENER EMPRESA POR ID
+// OBTENER GIRO POR ID
 // ==========================================
 app.get('/:id', (req, res) => {
     var id = req.params.id;
-    Empresa.findById(id)
+    Giro.findById(id)
         .populate('usuario', 'nombre img email')
-        .exec((err, empresa) => {
+        .exec((err, giro) => {
             if (err) {
                 return res.status(500).json({
                     ok: false,
-                    mensaje: 'Error al buscar empresa',
+                    mensaje: 'Error al buscar giro',
                     errors: err
                 });
             }
-            if (!empresa) {
+            if (!giro) {
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'El empresa con el id ' + id + 'no existe',
+                    mensaje: 'El giro con el id ' + id + 'no existe',
                     errors: {
-                        message: 'No existe un empresa con ese ID '
+                        message: 'No existe un giro con ese ID '
                     }
                 });
             }
             res.status(200).json({
                 ok: true,
-                empresa: empresa
+                giro: giro
             });
         })
 })
@@ -86,7 +85,7 @@ app.get('/:id', (req, res) => {
 
 
 // =============================================================================
-// ACTUALIZAR EMPRESA PUT
+// ACTUALIZAR GIRO PUT
 // =============================================================================
 
 app.put('/:id', mdAuctenticacion.verificaToken, (req, res) => {
@@ -94,41 +93,40 @@ app.put('/:id', mdAuctenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
     var body = req.body;
 
-    Empresa.findById(id, (err, empresa) => {
+    Giro.findById(id, (err, giro) => {
 
         if (err) {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al buscar empresa',
+                mensaje: 'Error al buscar giro',
                 errors: err
             });
         }
 
-        if (!empresa) {
+        if (!giro) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'El empresa con el id' + id + 'No existe',
-                errors: { message: 'No existe un empresa con ese ID' }
+                mensaje: 'El giro con el id' + id + 'No existe',
+                errors: { message: 'No existe un giro con ese ID' }
             });
         }
 
-        empresa.nombre = body.nombre;
-        empresa.giro = body.giro;
-        empresa.usuario = req.usuario._id;
+        giro.nombre = body.nombre;
+        giro.usuario = req.usuario._id;
 
-        empresa.save((err, estadoGuardado) => {
+        giro.save((err, giroGuardado) => {
 
             if (err) {
                 return res.status(400).json({
                     ok: false,
-                    mensaje: 'Error al actualizar empresa',
+                    mensaje: 'Error al actualizar giro',
                     errors: err
                 });
             }
 
             res.status(200).json({
                 ok: true,
-                empresa: estadoGuardado
+                giro: giroGuardado
             });
         });
     });
@@ -136,35 +134,30 @@ app.put('/:id', mdAuctenticacion.verificaToken, (req, res) => {
 
 
 // =======================================================================================================
-// CREAR UNA NUEVA EMPRESA POST
+// CREAR UN GIRO POST
 // =======================================================================================================
 app.post('/', mdAuctenticacion.verificaToken, (req, res) => {
 
     var body = req.body;
 
-    var empresa = new Empresa({
+    var giro = new Giro({
         nombre: body.nombre,
-        calle: body.calle,
-        colonia: body.colonia,
-        municipio: body.municipio,
-        estadorep: body.estadorep,
-        giro: body.giro,
         usuario: req.usuario._id
     });
 
-    empresa.save((err, estadoGuardado) => {
+    giro.save((err, giroGuardado) => {
 
         if (err) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'Error al crear el empresa',
+                mensaje: 'Error al crear el giro',
                 errors: err
             });
         }
 
         res.status(201).json({
             ok: true,
-            empresa: estadoGuardado
+            giro: giroGuardado
         });
 
     });
@@ -172,35 +165,35 @@ app.post('/', mdAuctenticacion.verificaToken, (req, res) => {
 });
 
 // =============================================================================
-// ELIMINACION DE UNA EMPRESA
+// ELIMINACION DE UNA GIRO
 // =============================================================================
 
 app.delete('/:id', mdAuctenticacion.verificaToken, (req, res) => {
 
     var id = req.params.id;
 
-    Empresa.findByIdAndRemove(id, (err, estadoBorrado) => {
+    Giro.findByIdAndRemove(id, (err, giroBorrado) => {
 
         if (err) {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al borrar empresa',
+                mensaje: 'Error al borrar giro',
                 errors: err
             });
         }
 
-        if (!estadoBorrado) {
+        if (!giroBorrado) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'No existe empresa con ese id',
-                errors: { message: 'empresa vacio' }
+                mensaje: 'No existe giro con ese id',
+                errors: { message: 'giro vacio' }
             });
         }
 
         res.status(200).json({
             ok: true,
-            empresa: estadoBorrado,
-            mensaje: 'Empresa fue eliminado correctamente'
+            giro: giroBorrado,
+            mensaje: 'Giro fue eliminado correctamente'
         });
 
     });

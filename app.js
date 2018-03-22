@@ -34,6 +34,7 @@ var imagenesRoutes = require("./routes/imagenes");
 var busquedaRoutes = require('./routes/busqueda');
 var estadoRoutes = require('./routes/estado');
 var empresaRoutes = require('./routes/empresa');
+var giroRoutes = require('./routes/giro');
 
 
 // Conexion a la base de datos
@@ -60,6 +61,7 @@ app.use('/upload', uploadRoutes);
 app.use("/img", imagenesRoutes);
 app.use("/estado", estadoRoutes);
 app.use("/empresa", empresaRoutes);
+app.use("/giro", giroRoutes);
 app.use('/', appRoutes);
 
 
