@@ -16,7 +16,6 @@ var auth = new GoogleAuth;
 const GOOGLE_CLIENT_ID = require("../config/config").GOOGLE_CLIENT_ID;
 const GOOGLE_SECRET = require("../config/config").GOOGLE_SECRET;
 
-
 // =============================================================================
 // LOGIN DEL SISTEMA
 // =============================================================================
@@ -151,7 +150,7 @@ app.post('/google', (req, res) => {
                         if (err) {
                             return res.status(500).json({
                                 ok: true,
-                                mensaje: "Error al crearusuario - google",
+                                mensaje: "Error al crear usuario - google",
                                 errors: err
                             });
                         }
@@ -195,7 +194,8 @@ function obtenerMenu(ROLE) {
             submenu: [
                 { titulo: 'Clientes', url: '/clientes' },
                 { titulo: 'Servicios', url: '/servicios' },
-                { titulo: 'Estados', url: '/estados' }
+                { titulo: 'Estados', url: '/estados' },
+                { titulo: 'Empresas', url: '/empresas' }
             ]
         }
     ];

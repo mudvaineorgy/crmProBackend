@@ -8,7 +8,8 @@ var app = express();
 var Usuario = require('../models/usuario');
 var Servicio = require('../models/servicio');
 var Cliente = require('../models/cliente');
-var Estado = require('../models/estado')
+var Estado = require('../models/estado');
+var Empresa = require('../models/empresa');
 
 // default options
 app.use(fileUpload());
@@ -22,7 +23,7 @@ app.put('/:tipo/:id', (req, res, next) => {
     var id = req.params.id;
 
     // Tipos validos de coleccion ===============================================
-    var tiposValidos = ['usuarios', 'clientes', 'servicios', 'estados'];
+    var tiposValidos = ['usuarios', 'clientes', 'servicios', 'estados', 'empresas'];
     if (tiposValidos.indexOf(tipo) < 0) {
         return res.status(400).json({
             ok: false,
@@ -49,7 +50,7 @@ app.put('/:tipo/:id', (req, res, next) => {
     var extencionArchivo = nombreCortado[nombreCortado.length - 1];
 
     // Solo estas extenciones seran permitidas ===============================================
-    var extencionesValidas = ['png', 'jpg', 'gif', 'jpeg'];
+    var extencionesValidas = ['png', 'jpg', 'gif', 'jpeg', 'JPG'];
     if (extencionesValidas.indexOf(extencionArchivo) < 0) {
         return res.status(400).json({
             ok: false,
@@ -214,6 +215,38 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
                         ok: true,
                         mensaje: "Imagen de estado Actualizado",
                         estado: estadoActualizado
+                    });
+            });
+        });
+
+    }
+
+    if (tipo === "empresas") {
+        Empresa.findById(id, (err, empresa) => {
+            if (!empresa) {
+                return res.status(400).json({
+                    ok: true,
+                    mensaje: "Empresa no existe",
+                    errors: { message: "Empresa no existe" }
+                });
+            }
+
+            var pathViejo = "./uploads/empresas/" + empresa.img;
+
+            // si existe elimina la imagen anterior ===============================================
+            if (fs.existsSync(pathViejo)) {
+                fs.unlink(pathViejo);
+            }
+
+            empresa.img = nombreArchivo;
+
+            empresa.save((err, empresaActualizado) => {
+                return res
+                    .status(200)
+                    .json({
+                        ok: true,
+                        mensaje: "Imagen de empresa Actualizado",
+                        empresa: empresaActualizado
                     });
             });
         });

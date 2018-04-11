@@ -1,23 +1,23 @@
 // Requires, importacion de librerias que se necesitan para que funcione.
-var express = require("express"); // Se carga la libreria de express.
-var fs = require('fs');
-
+var express = require('express'); // Se carga la libreria de express.
 var app = express();
 
-app.get("/:tipo/:img", (req, res, next) => {
+var path = require('path');
+var fs = require('fs');
+
+app.get('/:tipo/:img', (req, res, next) => {
 
     var tipo = req.params.tipo;
     var img = req.params.img;
 
-    var path = `./uploads/${tipo}/${img}`;
+    var pathImagen = path.resolve(__dirname, `../uploads/${tipo}/${img}`);
 
-    fs.exists(path, existe => {
-        if (!existe) {
-            path = './assets/no-img.jpg'
-        }
-
-        res.sendfile(path);
-    });
+    if (fs.existsSync(pathImagen)) {
+        res.sendFile(pathImagen);
+    } else {
+        var pathNoImagen = path.resolve(__dirname, '../assets/no-img.jpg');
+        res.sendFile(pathNoImagen);
+    }
 
 
 });

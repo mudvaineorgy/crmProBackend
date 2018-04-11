@@ -32,12 +32,12 @@ app.get('/coleccion/:tabla/:busqueda', (req, res) => {
             promesa = buscarClientes(busqueda, regex);
             break;
 
-        case 'estado':
-            promesa = buscarEstado(busqueda, regex);
+        case 'estados':
+            promesa = buscarEstados(busqueda, regex);
             break;
 
-        case 'empresa':
-            promesa = buscarEmpresa(busqueda, regex);
+        case 'empresas':
+            promesa = buscarEmpresas(busqueda, regex);
             break;
 
         default:
@@ -71,8 +71,8 @@ app.get('/todo/:busqueda', (req, res, next) => {
             buscarServicios(busqueda, regex),
             buscarClientes(busqueda, regex),
             buscarUsuarios(busqueda, regex),
-            buscarEstado(busqueda, regex),
-            buscarEmpresa(busqueda, regex)
+            buscarEstados(busqueda, regex),
+            buscarEmpresas(busqueda, regex)
         ])
         .then(respuestas => {
 
@@ -81,8 +81,8 @@ app.get('/todo/:busqueda', (req, res, next) => {
                 servicios: respuestas[0],
                 clientes: respuestas[1],
                 usuarios: respuestas[2],
-                estado: respuestas[3],
-                empresa: respuestas[4]
+                estados: respuestas[3],
+                empresas: respuestas[4]
             });
 
         })

@@ -16,8 +16,7 @@ app.get('/', (req, res, next) => {
     desde = Number(desde);
 
     Empresa.find({})
-        .populate('usuario', 'nombre email')
-        .populate('giro')
+        .populate('usuario', 'nombre email apodo img ')
         .skip(desde)
         .limit(10)
         .exec(
@@ -57,7 +56,9 @@ app.get('/', (req, res, next) => {
 // OBTENER EMPRESA POR ID
 // ==========================================
 app.get('/:id', (req, res) => {
+
     var id = req.params.id;
+
     Empresa.findById(id)
         .populate('usuario', 'nombre img email')
         .exec((err, empresa) => {
@@ -114,9 +115,13 @@ app.put('/:id', mdAuctenticacion.verificaToken, (req, res) => {
         }
 
         empresa.nombre = body.nombre;
+        empresa.calle = body.calle;
+        empresa.colonia = body.colonia;
+        empresa.municipio = body.municipio;
+        empresa.estadorep = body.estadorep;
+        empresa.img = body.img;
         empresa.giro = body.giro;
         empresa.usuario = req.usuario._id;
-
 
         empresa.save((err, estadoGuardado) => {
 
@@ -136,12 +141,12 @@ app.put('/:id', mdAuctenticacion.verificaToken, (req, res) => {
     });
 });
 
-
 // =======================================================================================================
 // CREAR UNA NUEVA EMPRESA POST
 // =======================================================================================================
 app.post('/', mdAuctenticacion.verificaToken, (req, res) => {
 
+    var id = req.params.id;
     var body = req.body;
 
     var empresa = new Empresa({
@@ -150,6 +155,7 @@ app.post('/', mdAuctenticacion.verificaToken, (req, res) => {
         colonia: body.colonia,
         municipio: body.municipio,
         estadorep: body.estadorep,
+        img: body.img,
         giro: body.giro,
         usuario: req.usuario._id,
         created_at: moment().format('Do MMMM YYYY, h:mm:ss a')

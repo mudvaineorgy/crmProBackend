@@ -6,8 +6,6 @@ var moment = require('moment');
 
 var mdAuctenticacion = require('../middlewares/Autenticacion');
 
-//var SEED = require('../config/config').SEED;
-
 var app = express();
 
 var Usuario = require('../models/usuario');
@@ -114,17 +112,18 @@ app.put('/:id', mdAuctenticacion.verificaToken, (req, res) => {
 // =======================================================================================================
 // Crear un nuevo usuario POST
 // =======================================================================================================
-app.post('/', /*mdAuctenticacion.verificaToken,*/ (req, res) => {
+app.post('/', (req, res) => {
 
     var body = req.body;
 
     var usuario = new Usuario({
         nombre: body.nombre,
-        email: body.email,
         apodo: body.apodo,
+        email: body.email,
         password: bcrypt.hashSync(body.password, 10),
         img: body.img,
         role: body.role,
+        google: body.google,
         created_at: moment().format('DD MM YYYY, h:mm:ss a')
     });
 
@@ -177,7 +176,7 @@ app.delete('/:id', mdAuctenticacion.verificaToken, (req, res) => {
         res.status(200).json({
             ok: true,
             usuario: usuarioBorrado,
-            mensaje: 'Usuario fue eliminmado correctamente'
+            mensaje: 'Usuario fue eliminado correctamente'
         });
 
     });

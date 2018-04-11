@@ -15,10 +15,10 @@ app.get('/', (req, res, next) => {
     var desde = req.query.desde || 0;
     desde = Number(desde);
 
-    Cliente.find({}, 'nombre img')
+    Cliente.find({})
         .skip(desde)
         .limit(10)
-        .populate('usuario', 'nombre email img')
+        .populate('usuario')
         .populate('estado')
         .populate('servicio')
         .populate('empresa')
@@ -65,7 +65,7 @@ app.get('/:id', (req, res) => {
     var id = req.params.id;
 
     Cliente.findById(id)
-        .populate('usuario', 'nombre img email')
+        .populate('usuario')
         .populate('servicio')
         .populate('estado')
         .populate('empresa')
@@ -125,9 +125,20 @@ app.put('/:id', mdAuctenticacion.verificaToken, (req, res) => {
         }
 
         cliente.nombre = body.nombre;
+        cliente.puesto = body.puesto;
+        cliente.email = body.email;
+        cliente.telefono = body.telefono;
+        cliente.cumple = body.cumple;
+        cliente.nombre2 = body.nombre2;
+        cliente.puesto2 = body.puesto2;
+        cliente.email2 = body.email2;
+        cliente.telefono2 = body.telefono2;
+        cliente.cumple2 = body.cumple2;
+        cliente.img = body.img;
+        cliente.archivo = body.archivo;
         cliente.usuario = req.usuario._id;
-        cliente.servicio = body.servicio;
         cliente.estado = body.estado;
+        cliente.servicio = body.servicio;
         cliente.empresa = body.empresa;
 
         cliente.save((err, clienteGuardado) => {
@@ -159,12 +170,23 @@ app.post('/', mdAuctenticacion.verificaToken, (req, res) => {
 
     var cliente = new Cliente({
         nombre: body.nombre,
+        puesto: body.puesto,
+        email: body.email,
+        telefono: body.telefono,
+        cumple: body.cumple,
+        nombre2: body.nombre2,
+        puesto2: body.puesto2,
+        email2: body.email2,
+        telefono2: body.telefono2,
+        cumple2: body.cumple2,
+        img: body.img,
+        archivo: body.archivo,
         usuario: req.usuario._id,
         estado: body.estado,
         servicio: body.servicio,
         empresa: body.empresa,
         mensaje: body.mensaje,
-        created_at: moment().format('DD MM YYYY, h:mm:ss a')
+        created_at: moment().format('DD MM YYYY')
     });
 
     cliente.save((err, clienteGuardado) => {
